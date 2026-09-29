@@ -19,6 +19,35 @@ def get_user_input():
     
     return origin, destination, departure_date
 
+
+# this is used for booking seats in flight
+def book_flights(flights_df, flight):
+    booked_seats = int(input("\nHow many seats would you like to book? "))
+
+    if flight.update_seats_remaining(booked_seats):
+        # this finds the corresponding flight in the df and updates its seats remaining
+        flights_df.loc[
+            flights_df["flight_number"] == flight.flight_number, 
+            "seats_remaining"] = flight.seats_remaining
+
+        flights_df.to_csv(
+            "data/flights.csv",
+            index=False,
+            date_format="%Y-%m-%d"
+        )
+
+        print("Booking successful!")
+        print(f"Seats remaining: {flight.seats_remaining}")
+
+    else:
+        print("Booking failed. Please check the number of seats.")
+
+
+
+
+
+
+
 # here we search for flights from loaded data from source
 def search_flights():
     flights_df = load_flights()
@@ -51,6 +80,34 @@ def search_flights():
         print(f"Departure: {flight.departure_date.date()}")
         print(f"Seats remaining: {flight.seats_remaining}")
         print(f"Dynamic price: ${flight.get_price()}")
+
+
+        # user select the flight they want to book
+        selected_flight_number = input(
+            "\nEnter the flight number you would like to book: "
+        ).upper()
+
+        selected_row = filtered_df[
+            filtered_df["flight_number"] == selected_flight_number
+        ]
+
+        if selected_row.empty:
+            print("Invalid flight number.")
+            return
+
+        row = selected_row.iloc[0]
+
+        selected_flight = Flight(
+            row["flight_number"],
+            row["origin"],
+            row["destination"],
+            row["departure_date"],
+            row["seats_remaining"],
+            row["capacity"],
+            row["base_fare"]
+        )
+
+        book_flights(flights_df, selected_flight)
 
 
 if __name__ == "__main__":
