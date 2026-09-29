@@ -17,9 +17,15 @@ class Flight:
 
     def has_capacity(self):
         return self.seats_remaining > 0
-
+    
+    # Updated this so that no negative seats
     def update_seats_remaining(self, booked_seats):
+        if booked_seats <= 0:
+            return False
+        if booked_seats > self.seats_remaining:
+            return False
         self.seats_remaining -= booked_seats
+        return True
 
     def get_load_factor(self):
         remain_percentage = self.seats_remaining / self.capacity
@@ -51,6 +57,10 @@ class Flight:
 
         days_until_departure = (self.departure_date - datetime.datetime.today()).days
 
+        # Added this error raise to preserve logic
+        if days_until_departure < 0:
+            raise ValueError("Flight has already departed.")
+        
         if days_until_departure < 7:
             return 1.55
         elif days_until_departure < 21:
@@ -60,7 +70,14 @@ class Flight:
         else:
             return 1.0
 
+    # Updated get_price for better readability
     def get_price(self):
-        return self.base_fare * self.get_load_factor() * self.get_seasonal_factor() * self.get_time_factor()
+        price = (
+            self.base_fare 
+            * self.get_load_factor() 
+            * self.get_seasonal_factor() 
+            * self.get_time_factor()
+        )
 
+        return round(price, 2)
     
