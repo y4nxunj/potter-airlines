@@ -12,11 +12,13 @@ def load_flights():
 # filter the same origin and destination
 # asking the user to put the year first, then month, then day to get the departure date
 # added seats remaining to be non zero
-def filter_flights(flights_df, flight):
+# NOTE: I am updating this to make it compatible with our main.py
+
+def filter_flights(flights_df, origin, destination, departure_date):
     filtered_df = flights_df[
-        (flights_df['origin'] == flight.origin) &
-        (flights_df['destination'] == flight.destination) &
-        (flights_df['departure_date'] == flight.departure_date) &
+        (flights_df['origin'] == origin) &
+        (flights_df['destination'] == destination) &
+        (flights_df['departure_date'] == departure_date) &
         (flights_df["seats_remaining"] > 0)
     ]
     return filtered_df
