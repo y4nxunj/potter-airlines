@@ -1,5 +1,5 @@
 import pandas as pd
-from src.analysis import load_flights, filter_flights
+from src.analysis import load_flights, filter_flights, get_cheapest_flights
 from src.flight import Flight
 
 # wirte a prompt to ask the use to write the origin and destination
@@ -74,12 +74,12 @@ def search_flights():
                 row["capacity"],
                 row["base_fare"],
             )
-
-        print(f"\nFlight: {flight.flight_number}")
-        print(f"Route: {flight.origin} -> {flight.destination}")
-        print(f"Departure: {flight.departure_date.date()}")
-        print(f"Seats remaining: {flight.seats_remaining}")
-        print(f"Dynamic price: ${flight.get_price()}")
+            
+            print(f"\nFlight: {flight.flight_number}")
+            print(f"Route: {flight.origin} -> {flight.destination}")
+            print(f"Departure: {flight.departure_date.date()}")
+            print(f"Seats remaining: {flight.seats_remaining}")
+            print(f"Dynamic price: ${flight.get_price()}")
 
 
         # user select the flight they want to book
@@ -110,5 +110,47 @@ def search_flights():
         book_flights(flights_df, selected_flight)
 
 
+# show cheapest flights calling exsiting sorting from analysis.py
+def show_cheapest_flights():
+    flights_df = load_flights()
+
+    cheapest_flights = get_cheapest_flights(flights_df)
+
+    print("\n5 Cheapest Flights by Base Fare:")
+
+    for _, row in cheapest_flights.iterrows():
+        print(
+            f"{row['flight_number']}: "
+            f"{row['origin']} -> {row['destination']} | "
+            f"{row['departure_date'].date()} | "
+            f"${row['base_fare']:.2f}"
+        )
+
+
+# add a main function to print messages
+# and give user choices of prompt
+def main():
+    while True:
+        print("\nWelcome to Potter Airlines!")
+        print("1. Search and book a flight")
+        print("2. Show cheapest flights")
+        print("3. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            search_flights()
+
+        elif choice == "2":
+            show_cheapest_flights()
+
+        elif choice == "3":
+            print("Thank you for using Potter Airlines :)")
+            break
+
+        else:
+            print("Invalid choice. Please try again")
+
+
 if __name__ == "__main__":
-    search_flights()
+    main()
