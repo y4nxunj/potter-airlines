@@ -27,7 +27,8 @@ def book_flights(flights_df, flight):
     if flight.update_seats_remaining(booked_seats):
         # this finds the corresponding flight in the df and updates its seats remaining
         flights_df.loc[
-            flights_df["flight_number"] == flight.flight_number, 
+            (flights_df["flight_number"] == flight.flight_number) &
+            (flights_df["departure_date"] == flight.departure_date), 
             "seats_remaining"] = flight.seats_remaining
 
         flights_df.to_csv(

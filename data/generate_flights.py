@@ -14,8 +14,8 @@ def generate_flights(number_of_flights=10000):
         "HKG", "NRT", "YVR", "SIN"
     ]
 
-    # Common Potter Airlines routes
-    # Popular routes appear more often in this list
+    # common potter airline routes
+    # popular routes appear more often in this list
     routes = [
         ("YYZ", "JFK"),
         ("YYZ", "JFK"),
@@ -76,7 +76,7 @@ def generate_flights(number_of_flights=10000):
 
     total_days = (end_date - start_date).days
 
-    # Create recurring Potter Airlines flight services
+    # generate recurring services so we have multiple flights
     flight_services = []
 
     for i in range(200):
@@ -93,8 +93,11 @@ def generate_flights(number_of_flights=10000):
 
         flight_services.append(flight_service)
 
-    # Generate scheduled flights
-    for _ in range(number_of_flights):
+    # keep track of flight number + date combinations already used
+    used_flights = set()
+
+    # generate scheduled flights
+    while len(flights) < number_of_flights:
 
         service = random.choice(flight_services)
 
@@ -102,9 +105,23 @@ def generate_flights(number_of_flights=10000):
             days=random.randint(0, total_days)
         )
 
+        departure_date_string = departure_date.strftime("%Y-%m-%d")
+
+        # one flight number can only appear once on the same date
+        flight_key = (
+            service["flight_number"],
+            departure_date_string
+        )
+
+        # if this exact scheduled flight already exists, try again
+        if flight_key in used_flights:
+            continue
+
+        used_flights.add(flight_key)
+
         capacity = service["capacity"]
 
-        # Most flights are between 20% and 95% occupied
+        # most flights are between 20% and 95% occupied
         occupancy_rate = random.uniform(0.20, 0.95)
 
         seats_remaining = round(
@@ -118,7 +135,7 @@ def generate_flights(number_of_flights=10000):
             "flight_number": service["flight_number"],
             "origin": service["origin"],
             "destination": service["destination"],
-            "departure_date": departure_date.strftime("%Y-%m-%d"),
+            "departure_date": departure_date_string,
             "base_fare": service["base_fare"],
             "seats_remaining": seats_remaining,
             "capacity": capacity,
