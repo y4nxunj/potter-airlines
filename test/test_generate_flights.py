@@ -1,42 +1,68 @@
-"""Tests for the current generate_flights.py file."""
+"""Tests for the updated generate_flights.py file."""
 
 import datetime
+import random
 
 from data.generate_flights import generate_flights
 
 
-def test_number_of_flights():
-    flights = generate_flights(100)
+# Generate the test data once so every test uses the same 10,000 flights.
+flights = generate_flights(10000)
 
-    assert len(flights) == 100
+
+def test_number_of_flights():
+    assert len(flights) == 10000
+
+
+def test_required_columns():
+    required_columns = {
+        "flight_number",
+        "origin",
+        "destination",
+        "departure_date",
+        "base_fare",
+        "seats_remaining",
+        "capacity"
+    }
+
+    for flight in flights:
+        assert set(flight.keys()) == required_columns
 
 
 def test_flight_numbers():
-    flights = generate_flights(100)
-    flight_numbers = []
+    for flight in flights:
+        flight_number = flight["flight_number"]
 
-    for index, flight in enumerate(flights):
-        assert flight["flight_number"] == f"PA{100 + index}"
-        flight_numbers.append(flight["flight_number"])
-
-    assert len(set(flight_numbers)) == 100
+        assert flight_number.startswith("PA")
+        assert flight_number[2:].isdigit()
+        assert 100 <= int(flight_number[2:]) <= 299
 
 
-def test_airports():
-    flights = generate_flights(100)
-    airports = [
-        "YYZ", "PVG", "LAX", "JFK", "LHR",
-        "CDG", "HKG", "NRT", "YVR", "SIN"
-    ]
+def test_routes():
+    valid_routes = {
+        ("YYZ", "JFK"), ("YYZ", "LAX"), ("YYZ", "YVR"),
+        ("YYZ", "LHR"), ("YYZ", "PVG"), ("YYZ", "HKG"),
+        ("JFK", "YYZ"), ("JFK", "LAX"), ("JFK", "LHR"),
+        ("JFK", "CDG"), ("LAX", "YYZ"), ("LAX", "JFK"),
+        ("LAX", "NRT"), ("LAX", "HKG"), ("LAX", "SIN"),
+        ("YVR", "YYZ"), ("YVR", "NRT"), ("YVR", "HKG"),
+        ("LHR", "YYZ"), ("LHR", "JFK"), ("LHR", "CDG"),
+        ("CDG", "LHR"), ("CDG", "JFK"), ("PVG", "YYZ"),
+        ("PVG", "HKG"), ("PVG", "NRT"), ("PVG", "SIN"),
+        ("HKG", "YYZ"), ("HKG", "PVG"), ("HKG", "NRT"),
+        ("HKG", "SIN"), ("NRT", "LAX"), ("NRT", "YVR"),
+        ("NRT", "HKG"), ("NRT", "SIN"), ("SIN", "HKG"),
+        ("SIN", "NRT"), ("SIN", "PVG")
+    }
 
     for flight in flights:
-        assert flight["origin"] in airports
-        assert flight["destination"] in airports
+        route = (flight["origin"], flight["destination"])
+
+        assert route in valid_routes
         assert flight["origin"] != flight["destination"]
 
 
 def test_departure_dates():
-    flights = generate_flights(100)
     start_date = datetime.datetime(2026, 10, 1)
     end_date = datetime.datetime(2027, 9, 30)
 
@@ -48,29 +74,22 @@ def test_departure_dates():
 
 
 def test_capacity_and_seats():
-    flights = generate_flights(100)
-
     for flight in flights:
-        assert 100 <= flight["capacity"] <= 300
+        assert 150 <= flight["capacity"] <= 300
         assert 0 <= flight["seats_remaining"] <= flight["capacity"]
 
 
-def test_base_fare():
-    flights = generate_flights(100)
+def test_occupancy_range():
+    for flight in flights:
+        occupancy_rate = (
+            1 - flight["seats_remaining"] / flight["capacity"]
+        )
 
+        # A small allowance is used because seats_remaining is rounded.
+        assert 0.19 <= occupancy_rate <= 0.96
+
+
+def test_base_fare():
     for flight in flights:
         assert 100 <= flight["base_fare"] <= 800
 
-
-def run_generate_flights_tests():
-    test_number_of_flights()
-    test_flight_numbers()
-    test_airports()
-    test_departure_dates()
-    test_capacity_and_seats()
-    test_base_fare()
-    print("All generate_flights tests passed.")
-
-
-if __name__ == "__main__":
-    run_generate_flights_tests()
