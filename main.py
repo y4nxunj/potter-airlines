@@ -30,7 +30,20 @@ def book_flights(flights_df, flight):
     while True:
         try:
             booked_seats = int(input("\nHow many seats would you like to book? "))
+
+            if booked_seats <= 0:
+                print("Please enter a number greater than 0.")
+                continue
+
+            if booked_seats > flight.seats_remaining:
+                print(
+                    f"Only {flight.seats_remaining} seats are available. "
+                    "Please try again."
+                )
+                continue
             break
+
+
         except ValueError:
             print("Please enter a valid number.")
 
