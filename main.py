@@ -6,23 +6,33 @@ from src.flight import Flight
 # updating for airport code case sensitivity
 def get_user_input():
     origin = input("Enter the origin airport code (e.g., YYZ): ").upper()
-
     destination = input("Enter the destination airport code (e.g., PVG): ").upper()
+
+    while True:
+        try:
+            departure_year = input("Enter the departure year (YYYY): ")
+            departure_month = input("Enter the departure month (MM): ")
+            departure_day = input("Enter the departure day (DD): ")
+            departure_date_str = f"{departure_year}-{departure_month}-{departure_day}"
     
-    departure_year = input("Enter the departure year (YYYY): ")
-    departure_month = input("Enter the departure month (MM): ")
-    departure_day = input("Enter the departure day (DD): ")
-    departure_date_str = f"{departure_year}-{departure_month}-{departure_day}"
-    
-    # convert string to datetime object
-    departure_date = pd.to_datetime(departure_date_str)
+            # convert string to datetime object
+            departure_date = pd.to_datetime(departure_date_str, format="%Y-%m-%d")
+            break
+
+        except ValueError:
+            print("\nInvalid date. Please try again.\n")
     
     return origin, destination, departure_date
 
 
 # this is used for booking seats in flight
 def book_flights(flights_df, flight):
-    booked_seats = int(input("\nHow many seats would you like to book? "))
+    while True:
+        try:
+            booked_seats = int(input("\nHow many seats would you like to book? "))
+            break
+        except ValueError:
+            print("Please enter a valid number.")
 
     if flight.update_seats_remaining(booked_seats):
         # this finds the corresponding flight in the df and updates its seats remaining
@@ -42,10 +52,6 @@ def book_flights(flights_df, flight):
 
     else:
         print("Booking failed. Please check the number of seats.")
-
-
-
-
 
 
 
@@ -82,19 +88,20 @@ def search_flights():
             print(f"Seats remaining: {flight.seats_remaining}")
             print(f"Dynamic price: ${flight.get_price()}")
 
+        while True:
+            # user select the flight they want to book
+            selected_flight_number = input(
+                "\nEnter the flight number you would like to book: "
+            ).upper()
 
-        # user select the flight they want to book
-        selected_flight_number = input(
-            "\nEnter the flight number you would like to book: "
-        ).upper()
+            selected_row = filtered_df[
+                filtered_df["flight_number"] == selected_flight_number
+            ]
 
-        selected_row = filtered_df[
-            filtered_df["flight_number"] == selected_flight_number
-        ]
-
-        if selected_row.empty:
-            print("Invalid flight number.")
-            return
+            if selected_row.empty:
+                print("Invalid flight number.")
+            else:
+                break
 
         row = selected_row.iloc[0]
 
