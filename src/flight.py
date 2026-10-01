@@ -1,3 +1,12 @@
+"""
+flight.py - Flight class for Potter Airlines
+
+Each flight has a flight number, origin, destination, departure date, seats remaining, capacity, and base fare.
+The class also has methods to calculate the dynamic price of the flight based on load factor, seasonal factor, and time factor.
+Other methods are included to validate and update the flight's capacity and seats remaining during the booking process.
+
+"""
+
 import datetime
 
 class Flight:
@@ -15,19 +24,30 @@ class Flight:
 
         self.base_fare = base_fare
 
+    # NOTE: not used
     def has_capacity(self):
         return self.seats_remaining > 0
-    
-    # Updated this so that no negative seats
+
+
     def update_seats_remaining(self, booked_seats):
+
+        # Returns True if the booking was successful, 
+        #         False otherwise (e.g., invalid number of seats or not enough seats remaining)
+        # Update seats remaining after a booking if successful
+
         if booked_seats <= 0:
             return False
         if booked_seats > self.seats_remaining:
             return False
+        
         self.seats_remaining -= booked_seats
         return True
 
+
     def get_load_factor(self):
+
+        # Returns a larger load factor for flights that are more full
+
         remain_percentage = self.seats_remaining / self.capacity
 
         if remain_percentage > 0.5:
@@ -37,10 +57,12 @@ class Flight:
         else:
             return 1.5
 
+
     def get_seasonal_factor(self):
 
         # Demand is higher in summer (June, July, August) and winter (December, January)
         # maybe April
+        # Returns a seasonal factor > 1.0 for these months, and no adjustments for other months
 
         month = self.departure_date.month
 
@@ -52,8 +74,11 @@ class Flight:
             return 1.2
         
         return 1.0
-    
+
+
     def get_time_factor(self):
+
+        # Returns a higher factor for flights that are closer to departure date
 
         days_until_departure = (self.departure_date - datetime.datetime.today()).days
 
@@ -70,8 +95,11 @@ class Flight:
         else:
             return 1.0
 
-    # Updated get_price for better readability
+
     def get_price(self):
+
+        # Calculate the dynamic price of the flight based on base fare, load factor, seasonal factor, and time factor
+
         price = (
             self.base_fare 
             * self.get_load_factor() 
