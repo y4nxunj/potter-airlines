@@ -1,3 +1,11 @@
+"""
+analysis.py - summary of flight data for Potter Airlines
+
+This file contains functions to filter and analyze flight data.
+It produces summaries of flight data, such as the cheapest flights, and can be used to support the booking process.
+
+"""
+
 import pandas as pd
 
 # we load the data file and need date and time into string
@@ -12,7 +20,6 @@ def load_flights():
 # filter the same origin and destination
 # asking the user to put the year first, then month, then day to get the departure date
 # added seats remaining to be non zero
-# NOTE: I am updating this to make it compatible with our main.py
 
 def filter_flights(flights_df, origin, destination, departure_date):
     filtered_df = flights_df[
