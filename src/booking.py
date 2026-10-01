@@ -121,9 +121,13 @@ def search_flights():
         while True:
             # user select the flight they want to book
             selected_flight_number = input(
-                "\nEnter the flight number you would like to book: "
+                "\nEnter the flight number you would like to book, or type 'n' to cancel: "
             ).upper()
 
+            if selected_flight_number == 'N':
+                print("Booking cancelled.")
+                return
+            
             selected_row = filtered_df[
                 filtered_df["flight_number"] == selected_flight_number
             ]
