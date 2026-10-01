@@ -4,7 +4,7 @@ from src.booking import search_flights
 
 from src.analysis import load_flights, get_cheapest_flights
 
-# NOTE: maybe moving this to a separate summary.py file, if there are more summary/filtering functions
+
 # show cheapest flights calling exsiting sorting from analysis.py
 def show_cheapest_flights():
     flights_df = load_flights()
