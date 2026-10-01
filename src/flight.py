@@ -100,5 +100,10 @@ class Flight:
             * self.get_time_factor()
         )
 
+        minimum_price = 100
+        maximum_price = 2000
+
+        price = max(minimum_price, min(price, maximum_price))
+
         return round(price, 2)
     

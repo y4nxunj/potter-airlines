@@ -109,6 +109,13 @@ def test_price_equation():
     assert flight.get_price() == expected_price
 
 
+def test_price_cap():
+    departure = datetime.datetime.today() + datetime.timedelta(days=100)
+    flight = Flight("PA100", "YYZ", "YVR", departure, 10, 100, 5000)
+
+    assert flight.get_price() == 2000
+
+
 def run_flight_tests():
     test_flight_validation()
     test_update_seats_remaining()
@@ -117,6 +124,7 @@ def run_flight_tests():
     test_time_factors()
     test_past_flight()
     test_price_equation()
+    test_price_cap()
     print("All Flight tests passed.")
 
 
