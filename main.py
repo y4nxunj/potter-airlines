@@ -18,7 +18,7 @@ def show_cheapest_flights():
             f"{row['flight_number']}: "
             f"{row['origin']} -> {row['destination']} | "
             f"{row['departure_date'].date()} | "
-            f"${row['base_fare']:.2f}"
+            f"From ${row['base_fare']:.2f}"
         )
 
 
