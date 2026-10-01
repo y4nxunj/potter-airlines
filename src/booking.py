@@ -91,25 +91,32 @@ def search_flights():
     if filtered_df.empty:
         print("\nNo available flights found.")
     else:
-        print("\nAvailable flights:")
-        # here we go through all matched flight in the filtered df one row at a time
-        # and we take the columns and create actual flight object
-        for _, row in filtered_df.iterrows():
-            flight = Flight(
+        # calculate dynamic price for each flight options
+        filtered_df = filtered_df.copy()
+
+        filtered_df["dynamic_price"] = filtered_df.apply(
+            lambda row: Flight(
                 row["flight_number"],
                 row["origin"],
                 row["destination"],
                 row["departure_date"],
                 row["seats_remaining"],
                 row["capacity"],
-                row["base_fare"],
-            )
-            
-            print(f"\nFlight: {flight.flight_number}")
-            print(f"Route: {flight.origin} -> {flight.destination}")
-            print(f"Departure: {flight.departure_date.date()}")
-            print(f"Seats remaining: {flight.seats_remaining}")
-            print(f"Dynamic price: ${flight.get_price()}")
+                row["base_fare"], 
+            ).get_price(), axis=1
+        )
+
+        # sort flights from cheapest to most expensive
+        filtered_df = filtered_df.sort_values("dynamic_price")
+
+        print("\nAvailable flights (cheapest to most expensive):")
+        for _, row in filtered_df.iterrows():
+            print(f"\nFlight: {row['flight_number']}")
+            print(f"Route: {row['origin']} -> {row['destination']}")
+            print(f"Departure: {row['departure_date'].date()}")
+            print(f"Seats remaining: {row['seats_remaining']}")
+            print(f"Dynamic price: ${row['dynamic_price']:.2f}")
+
 
         while True:
             # user select the flight they want to book

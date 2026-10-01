@@ -35,6 +35,6 @@ def add_occupancy_rate(flights_df):
 def get_cheapest_flights(flights_df, number_of_flights=5):
     cheapest_flights = flights_df.sort_values(
         "base_fare"
-    ).head(number_of_flights)
+    ).drop_duplicates(subset="flight_number").head(number_of_flights)
 
     return cheapest_flights
