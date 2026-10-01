@@ -28,15 +28,6 @@ def test_flight_validation():
     )
 
 
-def test_has_capacity():
-    departure = datetime.datetime.today() + datetime.timedelta(days=100)
-    available = Flight("PA100", "YYZ", "YVR", departure, 10, 100, 200)
-    sold_out = Flight("PA101", "YYZ", "YVR", departure, 0, 100, 200)
-
-    assert available.has_capacity() is True
-    assert sold_out.has_capacity() is False
-
-
 def test_update_seats_remaining():
     departure = datetime.datetime.today() + datetime.timedelta(days=100)
     flight = Flight("PA100", "YYZ", "YVR", departure, 10, 100, 200)
@@ -120,7 +111,6 @@ def test_price_equation():
 
 def run_flight_tests():
     test_flight_validation()
-    test_has_capacity()
     test_update_seats_remaining()
     test_load_factor_boundaries()
     test_seasonal_factors()

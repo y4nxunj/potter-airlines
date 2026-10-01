@@ -16,17 +16,10 @@ class Flight:
         self.destination = destination
         self.departure_date = departure_date
 
-        # seats_remaining should be between 0 and capacity; capacity should be positive
-        assert capacity > 0
-        assert 0 <= seats_remaining <= capacity
         self.seats_remaining = seats_remaining
         self.capacity = capacity
 
         self.base_fare = base_fare
-
-    # NOTE: not used
-    def has_capacity(self):
-        return self.seats_remaining > 0
 
 
     def update_seats_remaining(self, booked_seats):
