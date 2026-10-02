@@ -75,7 +75,7 @@ class Flight:
 
         # returns a higher factor for flights that are closer to departure date
 
-        days_until_departure = (self.departure_date - datetime.datetime.today().date()).days
+        days_until_departure = (self.departure_date - datetime.datetime.today()).days
 
         # added this error raise to preserve logic
         if days_until_departure < 0:
