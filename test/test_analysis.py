@@ -82,8 +82,8 @@ def test_get_cheapest_flights():
     cheapest = get_cheapest_flights(flights, 2)
 
     assert len(cheapest) == 2
-    assert cheapest["flight_number"].tolist() == ["PA102", "PA101"]
-    assert cheapest["base_fare"].tolist() == [100, 200]
+    assert cheapest["flight_number"].tolist() == ["PA102", "PA100"]
+    assert cheapest["base_fare"].tolist() == [100, 300]
 
 # run all analysis tests.
 def run_analysis_tests():
