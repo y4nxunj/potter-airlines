@@ -39,6 +39,7 @@ potter-airlines/
 │   ├── test_flight.py
 │   └── test_generate_flights.py
 │
+├── .gitignore
 ├── main.py
 ├── requirements.txt
 └── README.md
