@@ -1,5 +1,2 @@
-numpy
 pandas
-requests
-jupyterlab
 pytest
