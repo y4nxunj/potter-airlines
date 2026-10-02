@@ -1,8 +1,6 @@
 import pandas as pd
-from src.analysis import get_cheapest_flights
+from src.analysis import get_cheapest_flights, load_flights
 from src.booking import search_flights
-
-from src.analysis import load_flights, get_cheapest_flights
 
 
 # show cheapest flights calling exsiting sorting from analysis.py
