@@ -9,11 +9,6 @@ random.seed(42)
 
 def generate_flights(number_of_flights=10000):
 
-    airports = [
-        "YYZ", "PVG", "LAX", "JFK", "LHR", "CDG",
-        "HKG", "NRT", "YVR", "SIN"
-    ]
-
     # common potter airline routes
     # popular routes appear more often in this list
     routes = [

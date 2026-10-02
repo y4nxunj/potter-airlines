@@ -11,7 +11,7 @@ import pandas as pd
 
 from src.analysis import add_occupancy_rate, filter_flights, get_cheapest_flights
 
-# create a small DataFrame used by the analysis tests
+# create a small df used by the analysis tests
 def make_test_data():
     """Create a small DataFrame used by the analysis tests."""
     return pd.DataFrame({
@@ -26,8 +26,7 @@ def make_test_data():
         "capacity": [100, 100, 100, 200]
     })
 
-# Test filter_flights returns the correct flights based on 
-# origin, destination, and departure date
+# returns the correct flights
 def test_filter_flights():
     flights = make_test_data()
 
@@ -41,8 +40,7 @@ def test_filter_flights():
     assert len(selected) == 1
     assert selected.iloc[0]["flight_number"] == "PA100"
 
-# Test filter_flights removes flights that are 
-# sold out (seats_remaining = 0)
+# removes flights that are sold out
 def test_filter_removes_sold_out_flights():
     flights = make_test_data()
 
@@ -55,8 +53,7 @@ def test_filter_removes_sold_out_flights():
 
     assert "PA101" not in selected["flight_number"].tolist()
 
-# Test filter_flights returns an empty DataFrame when no flights 
-# match the criteria
+# returns an empty df when no flights
 def test_filter_no_match():
     flights = make_test_data()
 
@@ -69,8 +66,7 @@ def test_filter_no_match():
 
     assert selected.empty
 
-# Test add_occupancy_rate correctly calculates the occupancy rate for 
-# each flight
+# calculates the occupancy rate for each flight
 def test_add_occupancy_rate():
     flights = make_test_data()
     result = add_occupancy_rate(flights)
@@ -80,7 +76,7 @@ def test_add_occupancy_rate():
     assert result.loc[2, "occupancy_rate"] == 0.75
     assert result.loc[3, "occupancy_rate"] == 0.6
 
-# Test get_cheapest_flights returns correct flight_id and the price
+# returns correct flight id and price
 def test_get_cheapest_flights():
     flights = make_test_data()
     cheapest = get_cheapest_flights(flights, 2)
@@ -89,7 +85,7 @@ def test_get_cheapest_flights():
     assert cheapest["flight_number"].tolist() == ["PA102", "PA101"]
     assert cheapest["base_fare"].tolist() == [100, 200]
 
-# Run all analysis tests.
+# run all analysis tests.
 def run_analysis_tests():
     test_filter_flights()
     test_filter_removes_sold_out_flights()

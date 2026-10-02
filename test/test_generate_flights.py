@@ -9,19 +9,17 @@ remaining constraints, occupancy rate range, and base fare range.
 """
 
 import datetime
-import random
-
 from data.generate_flights import generate_flights
 
 
-# Generate the test data once so every test uses the same 10,000 flights.
+# generate the test data once so every test uses the same 10000 flights.
 flights = generate_flights(10000)
 
-# Test that the number of generated flights is correct
+# test that the number of generated flights is correct
 def test_number_of_flights():
     assert len(flights) == 10000
 
-# Test that the generated flight data contains the required columns
+# test that the generated flight data contains the required columns
 def test_required_columns():
     required_columns = {
         "flight_number",
@@ -36,7 +34,7 @@ def test_required_columns():
     for flight in flights:
         assert set(flight.keys()) == required_columns
 
-# Test that the flight numbers are valid and follow the expected format
+# test that the flight numbers are valid and follow the expected format
 def test_flight_numbers():
     for flight in flights:
         flight_number = flight["flight_number"]
@@ -45,7 +43,7 @@ def test_flight_numbers():
         assert flight_number[2:].isdigit()
         assert 100 <= int(flight_number[2:]) <= 299
 
-# Test that the origin and destination airports are valid and different
+# test that the origin and destination airports are valid and different
 def test_routes():
     valid_routes = {
         ("YYZ", "JFK"), ("YYZ", "LAX"), ("YYZ", "YVR"),
@@ -69,8 +67,7 @@ def test_routes():
         assert route in valid_routes
         assert flight["origin"] != flight["destination"]
 
-# Test that the departure dates are within the specified range 
-# (October 1, 2026 to September 30, 2027)
+# test that the departure dates are within the specified range 
 def test_departure_dates():
     start_date = datetime.datetime(2026, 10, 1)
     end_date = datetime.datetime(2027, 9, 30)
@@ -81,25 +78,23 @@ def test_departure_dates():
         )
         assert start_date <= departure_date <= end_date
 
-# Test that the capacity and seats remaining are within the specified
-# ranges
+# test that the capacity and seats remaining are within the range
 def test_capacity_and_seats():
     for flight in flights:
         assert 150 <= flight["capacity"] <= 300
         assert 0 <= flight["seats_remaining"] <= flight["capacity"]
 
-# Test that the occupancy rate is within the expected range 
-# (0.19 to 0.96)
+# test that the occupancy rate is within the expected range
 def test_occupancy_range():
     for flight in flights:
         occupancy_rate = (
             1 - flight["seats_remaining"] / flight["capacity"]
         )
 
-        # A small allowance is used because seats_remaining is rounded.
+        # a small allowance is used because seats remaining is rounded.
         assert 0.19 <= occupancy_rate <= 0.96
 
-# Test that the base fare is within the specified range (100 to 800)
+# test that the base fare is within the specified range
 def test_base_fare():
     for flight in flights:
         assert 100 <= flight["base_fare"] <= 800

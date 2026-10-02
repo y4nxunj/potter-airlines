@@ -16,17 +16,19 @@ class Flight:
         self.destination = destination
         self.departure_date = departure_date
 
+        assert capacity > 0
+        assert 0 <= seats_remaining <= capacity
+
         self.seats_remaining = seats_remaining
         self.capacity = capacity
-
         self.base_fare = base_fare
 
 
     def update_seats_remaining(self, booked_seats):
 
-        # Returns True if the booking was successful, 
-        #         False otherwise (e.g., invalid number of seats or not enough seats remaining)
-        # Update seats remaining after a booking if successful
+        # returns True if booking successful, 
+        # false otherwise
+        # update seats remaining after a booking if successful
 
         if booked_seats <= 0:
             return False
@@ -39,7 +41,7 @@ class Flight:
 
     def get_load_factor(self):
 
-        # Returns a larger load factor for flights that are more full
+        # returns a larger load factor for flights that are more full
 
         remain_percentage = self.seats_remaining / self.capacity
 
@@ -53,9 +55,9 @@ class Flight:
 
     def get_seasonal_factor(self):
 
-        # Demand is higher in summer (June, July, August) and winter (December, January)
-        # maybe April
-        # Returns a seasonal factor > 1.0 for these months, and no adjustments for other months
+        # demand is higher in summer and winter
+        # maybe april
+        # returns seasonal factor > 1.0 for these months and no change for other months
 
         month = self.departure_date.month
 
@@ -71,11 +73,11 @@ class Flight:
 
     def get_time_factor(self):
 
-        # Returns a higher factor for flights that are closer to departure date
+        # returns a higher factor for flights that are closer to departure date
 
-        days_until_departure = (self.departure_date - datetime.datetime.today()).days
+        days_until_departure = (self.departure_date - datetime.datetime.today().date()).days
 
-        # Added this error raise to preserve logic
+        # added this error raise to preserve logic
         if days_until_departure < 0:
             raise ValueError("Flight has already departed.")
         
@@ -91,7 +93,7 @@ class Flight:
 
     def get_price(self):
 
-        # Calculate the dynamic price of the flight based on base fare, load factor, seasonal factor, and time factor
+        # calculate the dynamic price of the flight based on base fare, load factor, seasonal factor, and time factor
 
         price = (
             self.base_fare 

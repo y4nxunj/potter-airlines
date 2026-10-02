@@ -40,8 +40,15 @@ def add_occupancy_rate(flights_df):
 
 # this gets cheapest flight by base fare, not the final dynamic pricing
 def get_cheapest_flights(flights_df, number_of_flights=5):
-    cheapest_flights = flights_df.sort_values(
-        "base_fare"
+
+    today = pd.Timestamp.today().normalize()
+
+    available_flights = flights_df[
+        (flights_df["departure_date"] >= today) &
+        (flights_df["seats_remaining"] > 0)
+    ]
+    cheapest_flights = available_flights.sort_values(
+        ["base_fare", "departure_date"]
     ).drop_duplicates(subset="flight_number").head(number_of_flights)
 
     return cheapest_flights

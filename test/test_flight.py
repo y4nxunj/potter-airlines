@@ -19,8 +19,7 @@ def check_assertion(function):
     except AssertionError:
         pass
 
-# Test the invalid capacity and seat values cause an AssertionError 
-# when creating a Flight object
+# test the invalid capacity and seat values cause error
 def test_flight_validation():
     departure = datetime.datetime.today() + datetime.timedelta(days=100)
 
@@ -34,8 +33,7 @@ def test_flight_validation():
         lambda: Flight("PA100", "YYZ", "YVR", departure, 101, 100, 200)
     )
 
-# Test the update_seats_remaining method correctly updates 
-# the seats remaining
+# test the method correctly updates seats remaining
 def test_update_seats_remaining():
     departure = datetime.datetime.today() + datetime.timedelta(days=100)
     flight = Flight("PA100", "YYZ", "YVR", departure, 10, 100, 200)
@@ -48,8 +46,7 @@ def test_update_seats_remaining():
     assert flight.update_seats_remaining(4) is True
     assert flight.seats_remaining == 6
 
-# Test the get_load_factor method returns the correct load factor 
-# based on the number of seats remaining and the capacity of the flight
+# test the method returns the correct load factor based on the number of seats remaining and the capacity of the flight
 def test_load_factor_boundaries():
     departure = datetime.datetime.today() + datetime.timedelta(days=100)
 
@@ -63,7 +60,7 @@ def test_load_factor_boundaries():
     assert above_ten.get_load_factor() == 1.2
     assert exactly_ten.get_load_factor() == 1.5
 
-# Test the summer, winter, April, and regular-month seasonal factors.
+# test the summer, winter, april, and other month seasonal factors.
 def test_seasonal_factors():
     def make_flight(month):
         departure = datetime.datetime(2027, month, 15)
@@ -74,7 +71,7 @@ def test_seasonal_factors():
     assert make_flight(4).get_seasonal_factor() == 1.2
     assert make_flight(3).get_seasonal_factor() == 1.0
 
-# Test the time factor for different days away from departure.
+# test the time factor for different days away from departure.
 def test_time_factors():
     now = datetime.datetime.today()
 
@@ -92,8 +89,7 @@ def test_time_factors():
     assert thirty_days.get_time_factor() == 1.11
     assert ninety_days.get_time_factor() == 1.0
 
-# Test that a flight that has already departed raises a ValueError when
-# calling get_time_factor
+# test that a flight that has already departed raises a value error
 def test_past_flight():
     departure = datetime.datetime.today() - datetime.timedelta(days=2)
     flight = Flight("PA100", "YYZ", "YVR", departure, 50, 100, 200)
@@ -104,8 +100,7 @@ def test_past_flight():
     except ValueError:
         pass
 
-# Test that the get_price method correctly calculates the dynamic 
-# price of the flight
+# test that the method correctly calculates the dynamic price of flight
 def test_price_equation():
     departure = datetime.datetime.today() + datetime.timedelta(days=100)
     flight = Flight("PA100", "YYZ", "YVR", departure, 50, 100, 200)
@@ -119,14 +114,14 @@ def test_price_equation():
     )
     assert flight.get_price() == expected_price
 
-# Testing that the price is capped at a maximum of 2000.
+# testing that the price is capped at a max of 2000.
 def test_price_cap():
     departure = datetime.datetime.today() + datetime.timedelta(days=100)
     flight = Flight("PA100", "YYZ", "YVR", departure, 10, 100, 5000)
 
     assert flight.get_price() == 2000
 
-# Run all flight tests.
+# run all flight tests.
 def run_flight_tests():
     test_flight_validation()
     test_update_seats_remaining()

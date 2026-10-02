@@ -1,4 +1,3 @@
-import pandas as pd
 from src.analysis import get_cheapest_flights, load_flights
 from src.booking import search_flights
 
